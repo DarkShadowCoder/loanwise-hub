@@ -1,0 +1,3852 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
+  public: {
+    Tables: {
+      admin_role_assignments: {
+        Row: {
+          admin_id: string
+          assigned_at: string
+          assigned_by_admin_id: string | null
+          role_id: string
+        }
+        Insert: {
+          admin_id: string
+          assigned_at?: string
+          assigned_by_admin_id?: string | null
+          role_id: string
+        }
+        Update: {
+          admin_id?: string
+          assigned_at?: string
+          assigned_by_admin_id?: string | null
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ara_admin_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ara_assigned_by_fkey"
+            columns: ["assigned_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ara_role_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "backoffice_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admins: {
+        Row: {
+          active: boolean
+          auth_user_id: string | null
+          full_name: string
+          id: string
+          login_attempts: number
+          role: Database["public"]["Enums"]["admin_role"]
+          secret_code_hash: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          active?: boolean
+          auth_user_id?: string | null
+          full_name: string
+          id?: string
+          login_attempts?: number
+          role: Database["public"]["Enums"]["admin_role"]
+          secret_code_hash?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          active?: boolean
+          auth_user_id?: string | null
+          full_name?: string
+          id?: string
+          login_attempts?: number
+          role?: Database["public"]["Enums"]["admin_role"]
+          secret_code_hash?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      audit_records: {
+        Row: {
+          admin_id: string | null
+          id: string
+          partner_id: string | null
+          proof_url: string | null
+          recorded_at: string
+          transaction_id: string
+        }
+        Insert: {
+          admin_id?: string | null
+          id?: string
+          partner_id?: string | null
+          proof_url?: string | null
+          recorded_at?: string
+          transaction_id: string
+        }
+        Update: {
+          admin_id?: string | null
+          id?: string
+          partner_id?: string | null
+          proof_url?: string | null
+          recorded_at?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_records_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_records_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_records_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audit_records_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      backoffice_permissions: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          label: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label?: string
+        }
+        Relationships: []
+      }
+      backoffice_role_permissions: {
+        Row: {
+          permission_id: string
+          role_id: string
+        }
+        Insert: {
+          permission_id: string
+          role_id: string
+        }
+        Update: {
+          permission_id?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brp_permission_fkey"
+            columns: ["permission_id"]
+            isOneToOne: false
+            referencedRelation: "backoffice_permissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "brp_role_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "backoffice_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      backoffice_roles: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          label: string
+          scope: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label: string
+          scope: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          label?: string
+          scope?: string
+        }
+        Relationships: []
+      }
+      bank_settlement_proofs: {
+        Row: {
+          description: string | null
+          file_url: string
+          id: string
+          settlement_id: string
+          uploaded_at: string
+          uploaded_by_admin_id: string | null
+          uploaded_by_partner_id: string | null
+        }
+        Insert: {
+          description?: string | null
+          file_url: string
+          id?: string
+          settlement_id: string
+          uploaded_at?: string
+          uploaded_by_admin_id?: string | null
+          uploaded_by_partner_id?: string | null
+        }
+        Update: {
+          description?: string | null
+          file_url?: string
+          id?: string
+          settlement_id?: string
+          uploaded_at?: string
+          uploaded_by_admin_id?: string | null
+          uploaded_by_partner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bsp_admin_fkey"
+            columns: ["uploaded_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bsp_partner_fkey"
+            columns: ["uploaded_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bsp_settlement_fkey"
+            columns: ["settlement_id"]
+            isOneToOne: false
+            referencedRelation: "bank_settlements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bank_settlements: {
+        Row: {
+          admin_id: string | null
+          amount: number
+          batch_id: string | null
+          completed_at: string | null
+          currency: string
+          destination_account_name: string | null
+          destination_account_reference: string | null
+          executed_at: string | null
+          external_reference: string | null
+          failure_reason: string | null
+          id: string
+          initiated_at: string
+          metadata: Json | null
+          notes: string | null
+          partner_id: string | null
+          settlement_type: string
+          source_account_name: string | null
+          source_account_reference: string | null
+          status: string
+          transaction_id: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          amount: number
+          batch_id?: string | null
+          completed_at?: string | null
+          currency?: string
+          destination_account_name?: string | null
+          destination_account_reference?: string | null
+          executed_at?: string | null
+          external_reference?: string | null
+          failure_reason?: string | null
+          id?: string
+          initiated_at?: string
+          metadata?: Json | null
+          notes?: string | null
+          partner_id?: string | null
+          settlement_type: string
+          source_account_name?: string | null
+          source_account_reference?: string | null
+          status?: string
+          transaction_id?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          amount?: number
+          batch_id?: string | null
+          completed_at?: string | null
+          currency?: string
+          destination_account_name?: string | null
+          destination_account_reference?: string | null
+          executed_at?: string | null
+          external_reference?: string | null
+          failure_reason?: string | null
+          id?: string
+          initiated_at?: string
+          metadata?: Json | null
+          notes?: string | null
+          partner_id?: string | null
+          settlement_type?: string
+          source_account_name?: string | null
+          source_account_reference?: string | null
+          status?: string
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bs_admin_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bs_batch_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "daily_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bs_partner_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bs_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bs_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_batches: {
+        Row: {
+          bank_proof_url: string | null
+          batch_date: string
+          id: string
+          notified_at: string | null
+          partner_id: string | null
+          processed_at: string | null
+          processed_by: string | null
+          scheduled_at: string | null
+          status: string
+          transfer_reference: string | null
+        }
+        Insert: {
+          bank_proof_url?: string | null
+          batch_date: string
+          id?: string
+          notified_at?: string | null
+          partner_id?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          scheduled_at?: string | null
+          status?: string
+          transfer_reference?: string | null
+        }
+        Update: {
+          bank_proof_url?: string | null
+          batch_date?: string
+          id?: string
+          notified_at?: string | null
+          partner_id?: string | null
+          processed_at?: string | null
+          processed_by?: string | null
+          scheduled_at?: string | null
+          status?: string
+          transfer_reference?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_batches_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_batches_processed_by_fkey"
+            columns: ["processed_by"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_action_logs: {
+        Row: {
+          action: string
+          admin_id: string | null
+          created_at: string
+          id: string
+          kma_id: string | null
+          new_value: Json | null
+          old_value: Json | null
+          partner_id: string | null
+          resource_id: string | null
+          resource_type: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          created_at?: string
+          id?: string
+          kma_id?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
+          partner_id?: string | null
+          resource_id?: string | null
+          resource_type: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          created_at?: string
+          id?: string
+          kma_id?: string | null
+          new_value?: Json | null
+          old_value?: Json | null
+          partner_id?: string | null
+          resource_id?: string | null
+          resource_type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_action_logs_admin_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_action_logs_kma_fkey"
+            columns: ["kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_action_logs_partner_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_action_logs_user_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_city_settings: {
+        Row: {
+          active: boolean
+          city: Database["public"]["Enums"]["kd_city"]
+          created_at: string
+          display_order: number
+        }
+        Insert: {
+          active?: boolean
+          city: Database["public"]["Enums"]["kd_city"]
+          created_at?: string
+          display_order: number
+        }
+        Update: {
+          active?: boolean
+          city?: Database["public"]["Enums"]["kd_city"]
+          created_at?: string
+          display_order?: number
+        }
+        Relationships: []
+      }
+      kd_driver_matches: {
+        Row: {
+          city_match: boolean | null
+          closed_at: string | null
+          contact_revealed_at: string | null
+          country_match: boolean | null
+          created_at: string | null
+          created_automatically: boolean
+          created_by_admin_id: string | null
+          created_by_kma_id: string | null
+          created_by_partner_id: string | null
+          driver_notified_at: string | null
+          driver_request_id: string
+          id: string
+          job_request_id: string
+          match_score: number | null
+          matched_at: string
+          mobility_match: boolean | null
+          profile_type_match: boolean | null
+          recruiter_notified_at: string | null
+          score: number | null
+          score_details: Json | null
+          selected_at: string | null
+          status: string
+          whatsapp_initiated_at: string | null
+        }
+        Insert: {
+          city_match?: boolean | null
+          closed_at?: string | null
+          contact_revealed_at?: string | null
+          country_match?: boolean | null
+          created_at?: string | null
+          created_automatically?: boolean
+          created_by_admin_id?: string | null
+          created_by_kma_id?: string | null
+          created_by_partner_id?: string | null
+          driver_notified_at?: string | null
+          driver_request_id: string
+          id?: string
+          job_request_id: string
+          match_score?: number | null
+          matched_at?: string
+          mobility_match?: boolean | null
+          profile_type_match?: boolean | null
+          recruiter_notified_at?: string | null
+          score?: number | null
+          score_details?: Json | null
+          selected_at?: string | null
+          status?: string
+          whatsapp_initiated_at?: string | null
+        }
+        Update: {
+          city_match?: boolean | null
+          closed_at?: string | null
+          contact_revealed_at?: string | null
+          country_match?: boolean | null
+          created_at?: string | null
+          created_automatically?: boolean
+          created_by_admin_id?: string | null
+          created_by_kma_id?: string | null
+          created_by_partner_id?: string | null
+          driver_notified_at?: string | null
+          driver_request_id?: string
+          id?: string
+          job_request_id?: string
+          match_score?: number | null
+          matched_at?: string
+          mobility_match?: boolean | null
+          profile_type_match?: boolean | null
+          recruiter_notified_at?: string | null
+          score?: number | null
+          score_details?: Json | null
+          selected_at?: string | null
+          status?: string
+          whatsapp_initiated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_dm_admin_fkey"
+            columns: ["created_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_driver_request_fkey"
+            columns: ["driver_request_id"]
+            isOneToOne: false
+            referencedRelation: "kd_driver_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_job_request_fkey"
+            columns: ["job_request_id"]
+            isOneToOne: false
+            referencedRelation: "kd_job_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_kma_fkey"
+            columns: ["created_by_kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_partner_fkey"
+            columns: ["created_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_driver_request_cities: {
+        Row: {
+          city: Database["public"]["Enums"]["kd_city"]
+          created_at: string
+          driver_request_id: string
+          id: string
+        }
+        Insert: {
+          city: Database["public"]["Enums"]["kd_city"]
+          created_at?: string
+          driver_request_id: string
+          id?: string
+        }
+        Update: {
+          city?: Database["public"]["Enums"]["kd_city"]
+          created_at?: string
+          driver_request_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_driver_request_cities_request_fk"
+            columns: ["driver_request_id"]
+            isOneToOne: false
+            referencedRelation: "kd_driver_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_driver_requests: {
+        Row: {
+          city: string | null
+          closed_at: string | null
+          contact_phone: string | null
+          country: string
+          created_at: string
+          description: string | null
+          drivers_needed: number
+          id: string
+          latitude: number | null
+          longitude: number | null
+          managed_by_admin_id: string | null
+          managed_by_kma_id: string | null
+          managed_by_partner_id: string | null
+          matched_at: string | null
+          neighborhood: string | null
+          requester_user_id: string | null
+          selected_at: string | null
+          selected_job_request_id: string | null
+          status: string
+          updated_at: string
+          whatsapp_initiated_at: string | null
+        }
+        Insert: {
+          city?: string | null
+          closed_at?: string | null
+          contact_phone?: string | null
+          country: string
+          created_at?: string
+          description?: string | null
+          drivers_needed: number
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          managed_by_admin_id?: string | null
+          managed_by_kma_id?: string | null
+          managed_by_partner_id?: string | null
+          matched_at?: string | null
+          neighborhood?: string | null
+          requester_user_id?: string | null
+          selected_at?: string | null
+          selected_job_request_id?: string | null
+          status?: string
+          updated_at?: string
+          whatsapp_initiated_at?: string | null
+        }
+        Update: {
+          city?: string | null
+          closed_at?: string | null
+          contact_phone?: string | null
+          country?: string
+          created_at?: string
+          description?: string | null
+          drivers_needed?: number
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          managed_by_admin_id?: string | null
+          managed_by_kma_id?: string | null
+          managed_by_partner_id?: string | null
+          matched_at?: string | null
+          neighborhood?: string | null
+          requester_user_id?: string | null
+          selected_at?: string | null
+          selected_job_request_id?: string | null
+          status?: string
+          updated_at?: string
+          whatsapp_initiated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_driver_requests_admin_fkey"
+            columns: ["managed_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_driver_requests_kma_fkey"
+            columns: ["managed_by_kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_driver_requests_partner_fkey"
+            columns: ["managed_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_driver_requests_user_fkey"
+            columns: ["requester_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_job_requests: {
+        Row: {
+          city: Database["public"]["Enums"]["kd_city"] | null
+          closed_at: string | null
+          country: string
+          created_at: string
+          description: string | null
+          full_name: string
+          id: string
+          managed_by_admin_id: string | null
+          managed_by_kma_id: string | null
+          managed_by_partner_id: string | null
+          mobility_area: string
+          phone_number: string | null
+          profile_id: string
+          published_at: string | null
+          region: string | null
+          status: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          city?: Database["public"]["Enums"]["kd_city"] | null
+          closed_at?: string | null
+          country: string
+          created_at?: string
+          description?: string | null
+          full_name: string
+          id?: string
+          managed_by_admin_id?: string | null
+          managed_by_kma_id?: string | null
+          managed_by_partner_id?: string | null
+          mobility_area: string
+          phone_number?: string | null
+          profile_id: string
+          published_at?: string | null
+          region?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          city?: Database["public"]["Enums"]["kd_city"] | null
+          closed_at?: string | null
+          country?: string
+          created_at?: string
+          description?: string | null
+          full_name?: string
+          id?: string
+          managed_by_admin_id?: string | null
+          managed_by_kma_id?: string | null
+          managed_by_partner_id?: string | null
+          mobility_area?: string
+          phone_number?: string | null
+          profile_id?: string
+          published_at?: string | null
+          region?: string | null
+          status?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_job_requests_admin_fkey"
+            columns: ["managed_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_job_requests_kma_fkey"
+            columns: ["managed_by_kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_job_requests_partner_fkey"
+            columns: ["managed_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_job_requests_profile_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "kd_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_job_requests_profile_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "kd_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_moderation_actions: {
+        Row: {
+          action: string
+          admin_id: string | null
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          kma_id: string | null
+          new_status: string | null
+          old_status: string | null
+          reason: string | null
+        }
+        Insert: {
+          action: string
+          admin_id?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          kma_id?: string | null
+          new_status?: string | null
+          old_status?: string | null
+          reason?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          kma_id?: string | null
+          new_status?: string | null
+          old_status?: string | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_ma_admin_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_ma_kma_fkey"
+            columns: ["kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_profiles: {
+        Row: {
+          active: boolean
+          bio: string | null
+          city: string | null
+          created_at: string
+          full_name: string
+          id: string
+          mobility_area: string | null
+          neighborhood: string | null
+          phone_number: string | null
+          profile_type: string
+          region: string | null
+          residence_country: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          mobility_area?: string | null
+          neighborhood?: string | null
+          phone_number?: string | null
+          profile_type?: string
+          region?: string | null
+          residence_country: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          mobility_area?: string | null
+          neighborhood?: string | null
+          phone_number?: string | null
+          profile_type?: string
+          region?: string | null
+          residence_country?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_profiles_user_fk"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_profiles_user_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_quest_contributions: {
+        Row: {
+          amount: number
+          confirmed_at: string | null
+          contributed_at: string
+          contributor_user_id: string
+          id: string
+          is_creator_initial_contribution: boolean
+          metadata: Json | null
+          quest_id: string
+          refunded_at: string | null
+          reversed_at: string | null
+          status: string
+          wallet_ledger_entry_id: string | null
+        }
+        Insert: {
+          amount: number
+          confirmed_at?: string | null
+          contributed_at?: string
+          contributor_user_id: string
+          id?: string
+          is_creator_initial_contribution?: boolean
+          metadata?: Json | null
+          quest_id: string
+          refunded_at?: string | null
+          reversed_at?: string | null
+          status?: string
+          wallet_ledger_entry_id?: string | null
+        }
+        Update: {
+          amount?: number
+          confirmed_at?: string | null
+          contributed_at?: string
+          contributor_user_id?: string
+          id?: string
+          is_creator_initial_contribution?: boolean
+          metadata?: Json | null
+          quest_id?: string
+          refunded_at?: string | null
+          reversed_at?: string | null
+          status?: string
+          wallet_ledger_entry_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_contributions_quest_fk"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "kd_quests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_contributions_quest_fk"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "v_kd_quest_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_contributions_user_fk"
+            columns: ["contributor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qc_ledger_fkey"
+            columns: ["wallet_ledger_entry_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_ledger_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qc_quest_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "kd_quests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qc_quest_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "v_kd_quest_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qc_user_fkey"
+            columns: ["contributor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_quest_events: {
+        Row: {
+          actor_admin_id: string | null
+          actor_kma_id: string | null
+          actor_partner_id: string | null
+          actor_user_id: string | null
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json | null
+          new_status: string | null
+          note: string | null
+          previous_status: string | null
+          quest_id: string
+        }
+        Insert: {
+          actor_admin_id?: string | null
+          actor_kma_id?: string | null
+          actor_partner_id?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          new_status?: string | null
+          note?: string | null
+          previous_status?: string | null
+          quest_id: string
+        }
+        Update: {
+          actor_admin_id?: string | null
+          actor_kma_id?: string | null
+          actor_partner_id?: string | null
+          actor_user_id?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          new_status?: string | null
+          note?: string | null
+          previous_status?: string | null
+          quest_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_qe_admin_fkey"
+            columns: ["actor_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qe_kma_fkey"
+            columns: ["actor_kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qe_partner_fkey"
+            columns: ["actor_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qe_quest_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "kd_quests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qe_quest_fkey"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "v_kd_quest_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_qe_user_fkey"
+            columns: ["actor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_quest_members: {
+        Row: {
+          id: string
+          joined_at: string
+          left_at: string | null
+          quest_id: string
+          status: Database["public"]["Enums"]["kd_quest_member_status"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          left_at?: string | null
+          quest_id: string
+          status?: Database["public"]["Enums"]["kd_quest_member_status"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          left_at?: string | null
+          quest_id?: string
+          status?: Database["public"]["Enums"]["kd_quest_member_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_quest_members_quest_fk"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "kd_quests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quest_members_quest_fk"
+            columns: ["quest_id"]
+            isOneToOne: false
+            referencedRelation: "v_kd_quest_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quest_members_user_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_quests: {
+        Row: {
+          beneficiary_approval_required: boolean | null
+          beneficiary_approved_at: string | null
+          beneficiary_rejected_at: string | null
+          beneficiary_user_id: string | null
+          cancelled_at: string | null
+          closed_at: string | null
+          completed_at: string | null
+          created_at: string
+          creator_initial_contribution_id: string | null
+          creator_initial_contribution_required: boolean
+          creator_user_id: string | null
+          currency: string
+          current_amount: number
+          description: string | null
+          duration_end: string | null
+          duration_start: string
+          id: string
+          managed_by_admin_id: string | null
+          managed_by_kma_id: string | null
+          managed_by_partner_id: string | null
+          moderated_at: string | null
+          moderated_by_kma_id: string | null
+          published_at: string | null
+          settled_at: string | null
+          settlement_amount: number | null
+          settlement_transaction_id: string | null
+          seven_day_deadline: string | null
+          status: string
+          target_amount: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          beneficiary_approval_required?: boolean | null
+          beneficiary_approved_at?: string | null
+          beneficiary_rejected_at?: string | null
+          beneficiary_user_id?: string | null
+          cancelled_at?: string | null
+          closed_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          creator_initial_contribution_id?: string | null
+          creator_initial_contribution_required?: boolean
+          creator_user_id?: string | null
+          currency?: string
+          current_amount?: number
+          description?: string | null
+          duration_end?: string | null
+          duration_start?: string
+          id?: string
+          managed_by_admin_id?: string | null
+          managed_by_kma_id?: string | null
+          managed_by_partner_id?: string | null
+          moderated_at?: string | null
+          moderated_by_kma_id?: string | null
+          published_at?: string | null
+          settled_at?: string | null
+          settlement_amount?: number | null
+          settlement_transaction_id?: string | null
+          seven_day_deadline?: string | null
+          status?: string
+          target_amount?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          beneficiary_approval_required?: boolean | null
+          beneficiary_approved_at?: string | null
+          beneficiary_rejected_at?: string | null
+          beneficiary_user_id?: string | null
+          cancelled_at?: string | null
+          closed_at?: string | null
+          completed_at?: string | null
+          created_at?: string
+          creator_initial_contribution_id?: string | null
+          creator_initial_contribution_required?: boolean
+          creator_user_id?: string | null
+          currency?: string
+          current_amount?: number
+          description?: string | null
+          duration_end?: string | null
+          duration_start?: string
+          id?: string
+          managed_by_admin_id?: string | null
+          managed_by_kma_id?: string | null
+          managed_by_partner_id?: string | null
+          moderated_at?: string | null
+          moderated_by_kma_id?: string | null
+          published_at?: string | null
+          settled_at?: string | null
+          settlement_amount?: number | null
+          settlement_transaction_id?: string | null
+          seven_day_deadline?: string | null
+          status?: string
+          target_amount?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_quests_admin_fkey"
+            columns: ["managed_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_beneficiary_fk"
+            columns: ["beneficiary_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_beneficiary_fkey"
+            columns: ["beneficiary_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_creator_fk"
+            columns: ["creator_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_creator_fkey"
+            columns: ["creator_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_kma_fkey"
+            columns: ["managed_by_kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_moderated_kma_fkey"
+            columns: ["moderated_by_kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_partner_fkey"
+            columns: ["managed_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_reports: {
+        Row: {
+          admin_id: string | null
+          content: string | null
+          created_at: string
+          file_url: string | null
+          id: string
+          kma_id: string | null
+          report_date: string
+          report_type: string
+          title: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          content?: string | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          kma_id?: string | null
+          report_date?: string
+          report_type: string
+          title?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          content?: string | null
+          created_at?: string
+          file_url?: string | null
+          id?: string
+          kma_id?: string | null
+          report_date?: string
+          report_type?: string
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_reports_admin_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_reports_kma_fkey"
+            columns: ["kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kd_settings: {
+        Row: {
+          created_at: string
+          id: number
+          updated_at: string
+          whatsapp_admin_name: string
+          whatsapp_admin_number: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          updated_at?: string
+          whatsapp_admin_name?: string
+          whatsapp_admin_number?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          updated_at?: string
+          whatsapp_admin_name?: string
+          whatsapp_admin_number?: string | null
+        }
+        Relationships: []
+      }
+      kmerdiaspora_admins: {
+        Row: {
+          active: boolean
+          auth_user_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          login_attempts: number
+          notes: string | null
+          phone_number: string | null
+          role: string
+          secret_code_hash: string | null
+          updated_at: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          active?: boolean
+          auth_user_id?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          login_attempts?: number
+          notes?: string | null
+          phone_number?: string | null
+          role?: string
+          secret_code_hash?: string | null
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          active?: boolean
+          auth_user_id?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          login_attempts?: number
+          notes?: string | null
+          phone_number?: string | null
+          role?: string
+          secret_code_hash?: string | null
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      loan_disbursements: {
+        Row: {
+          admin_id: string | null
+          amount: number
+          created_at: string
+          external_reference: string | null
+          failure_reason: string | null
+          id: string
+          loan_id: string
+          metadata: Json | null
+          method: string
+          processed_at: string | null
+          status: string
+        }
+        Insert: {
+          admin_id?: string | null
+          amount: number
+          created_at?: string
+          external_reference?: string | null
+          failure_reason?: string | null
+          id?: string
+          loan_id: string
+          metadata?: Json | null
+          method: string
+          processed_at?: string | null
+          status?: string
+        }
+        Update: {
+          admin_id?: string | null
+          amount?: number
+          created_at?: string
+          external_reference?: string | null
+          failure_reason?: string | null
+          id?: string
+          loan_id?: string
+          metadata?: Json | null
+          method?: string
+          processed_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_disbursements_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_disbursements_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: true
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loan_events: {
+        Row: {
+          actor_admin_id: string | null
+          amount: number | null
+          created_at: string
+          event_type: string
+          id: string
+          loan_id: string | null
+          loan_request_id: string | null
+          metadata: Json | null
+          note: string | null
+        }
+        Insert: {
+          actor_admin_id?: string | null
+          amount?: number | null
+          created_at?: string
+          event_type: string
+          id?: string
+          loan_id?: string | null
+          loan_request_id?: string | null
+          metadata?: Json | null
+          note?: string | null
+        }
+        Update: {
+          actor_admin_id?: string | null
+          amount?: number | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          loan_id?: string | null
+          loan_request_id?: string | null
+          metadata?: Json | null
+          note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_events_actor_admin_id_fkey"
+            columns: ["actor_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_events_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_events_loan_request_id_fkey"
+            columns: ["loan_request_id"]
+            isOneToOne: false
+            referencedRelation: "loan_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loan_installments: {
+        Row: {
+          amount_due: number
+          amount_paid: number
+          created_at: string
+          due_date: string
+          id: string
+          installment_number: number
+          loan_id: string
+          paid_at: string | null
+          status: string
+        }
+        Insert: {
+          amount_due: number
+          amount_paid?: number
+          created_at?: string
+          due_date: string
+          id?: string
+          installment_number: number
+          loan_id: string
+          paid_at?: string | null
+          status?: string
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number
+          created_at?: string
+          due_date?: string
+          id?: string
+          installment_number?: number
+          loan_id?: string
+          paid_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_installments_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loan_repayments: {
+        Row: {
+          amount: number
+          created_at: string
+          external_reference: string | null
+          id: string
+          loan_id: string
+          metadata: Json | null
+          note: string | null
+          paid_at: string
+          payment_method: string
+          proof_url: string | null
+          recorded_by_admin_id: string | null
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          loan_id: string
+          metadata?: Json | null
+          note?: string | null
+          paid_at?: string
+          payment_method?: string
+          proof_url?: string | null
+          recorded_by_admin_id?: string | null
+          status?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          external_reference?: string | null
+          id?: string
+          loan_id?: string
+          metadata?: Json | null
+          note?: string | null
+          paid_at?: string
+          payment_method?: string
+          proof_url?: string | null
+          recorded_by_admin_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_repayments_loan_id_fkey"
+            columns: ["loan_id"]
+            isOneToOne: false
+            referencedRelation: "loans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_repayments_recorded_by_admin_id_fkey"
+            columns: ["recorded_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loan_requests: {
+        Row: {
+          accommodation_months: number
+          accommodation_requested: boolean
+          admin_id: string | null
+          admin_notes: string | null
+          amount: number
+          cancelled_at: string | null
+          completed_at: string | null
+          contacted_at: string | null
+          contacted_by_admin_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          id_back_path: string
+          id_front_path: string
+          loan_type: string
+          passenger_name: string | null
+          phone_number: string | null
+          processed_at: string | null
+          rank_at_request: string
+          rank_rule_id: string | null
+          rejection_reason: string | null
+          repayment_months: number
+          status: string
+          submitted_at: string
+          travel_date: string | null
+          travel_destination: string | null
+          travel_origin: string | null
+          updated_at: string
+          user_id: string
+          whatsapp_number: string
+        }
+        Insert: {
+          accommodation_months?: number
+          accommodation_requested?: boolean
+          admin_id?: string | null
+          admin_notes?: string | null
+          amount: number
+          cancelled_at?: string | null
+          completed_at?: string | null
+          contacted_at?: string | null
+          contacted_by_admin_id?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          id_back_path: string
+          id_front_path: string
+          loan_type: string
+          passenger_name?: string | null
+          phone_number?: string | null
+          processed_at?: string | null
+          rank_at_request: string
+          rank_rule_id?: string | null
+          rejection_reason?: string | null
+          repayment_months: number
+          status?: string
+          submitted_at?: string
+          travel_date?: string | null
+          travel_destination?: string | null
+          travel_origin?: string | null
+          updated_at?: string
+          user_id: string
+          whatsapp_number: string
+        }
+        Update: {
+          accommodation_months?: number
+          accommodation_requested?: boolean
+          admin_id?: string | null
+          admin_notes?: string | null
+          amount?: number
+          cancelled_at?: string | null
+          completed_at?: string | null
+          contacted_at?: string | null
+          contacted_by_admin_id?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          id_back_path?: string
+          id_front_path?: string
+          loan_type?: string
+          passenger_name?: string | null
+          phone_number?: string | null
+          processed_at?: string | null
+          rank_at_request?: string
+          rank_rule_id?: string | null
+          rejection_reason?: string | null
+          repayment_months?: number
+          status?: string
+          submitted_at?: string
+          travel_date?: string | null
+          travel_destination?: string | null
+          travel_origin?: string | null
+          updated_at?: string
+          user_id?: string
+          whatsapp_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_requests_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_requests_rank_rule_id_fkey"
+            columns: ["rank_rule_id"]
+            isOneToOne: false
+            referencedRelation: "rank_rules"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loan_status_history: {
+        Row: {
+          admin_id: string | null
+          created_at: string
+          id: string
+          loan_request_id: string
+          metadata: Json | null
+          new_status: string
+          previous_status: string | null
+          reason: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          created_at?: string
+          id?: string
+          loan_request_id: string
+          metadata?: Json | null
+          new_status: string
+          previous_status?: string | null
+          reason?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          created_at?: string
+          id?: string
+          loan_request_id?: string
+          metadata?: Json | null
+          new_status?: string
+          previous_status?: string | null
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loan_status_history_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loan_status_history_loan_request_id_fkey"
+            columns: ["loan_request_id"]
+            isOneToOne: false
+            referencedRelation: "loan_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      loans: {
+        Row: {
+          accommodation_months: number
+          amount_repaid: number
+          approved_amount: number
+          approved_at: string
+          approved_by_admin_id: string | null
+          closed_at: string | null
+          created_at: string
+          disbursed_at: string | null
+          disbursement_status: string
+          id: string
+          loan_request_id: string
+          loan_type: string
+          maturity_date: string | null
+          notes: string | null
+          outstanding_amount: number
+          rank_at_approval: string
+          repayment_months: number
+          requested_amount: number
+          service_fee: number
+          status: string
+          total_due: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accommodation_months?: number
+          amount_repaid?: number
+          approved_amount: number
+          approved_at?: string
+          approved_by_admin_id?: string | null
+          closed_at?: string | null
+          created_at?: string
+          disbursed_at?: string | null
+          disbursement_status?: string
+          id?: string
+          loan_request_id: string
+          loan_type: string
+          maturity_date?: string | null
+          notes?: string | null
+          outstanding_amount: number
+          rank_at_approval: string
+          repayment_months: number
+          requested_amount: number
+          service_fee?: number
+          status?: string
+          total_due: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accommodation_months?: number
+          amount_repaid?: number
+          approved_amount?: number
+          approved_at?: string
+          approved_by_admin_id?: string | null
+          closed_at?: string | null
+          created_at?: string
+          disbursed_at?: string | null
+          disbursement_status?: string
+          id?: string
+          loan_request_id?: string
+          loan_type?: string
+          maturity_date?: string | null
+          notes?: string | null
+          outstanding_amount?: number
+          rank_at_approval?: string
+          repayment_months?: number
+          requested_amount?: number
+          service_fee?: number
+          status?: string
+          total_due?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loans_approved_by_admin_id_fkey"
+            columns: ["approved_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loans_loan_request_id_fkey"
+            columns: ["loan_request_id"]
+            isOneToOne: true
+            referencedRelation: "loan_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "loans_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      momo_deposit_numbers: {
+        Row: {
+          active: boolean
+          holder_name: string
+          id: string
+          max_amount: number | null
+          min_amount: number | null
+          phone_number: string
+        }
+        Insert: {
+          active?: boolean
+          holder_name: string
+          id?: string
+          max_amount?: number | null
+          min_amount?: number | null
+          phone_number: string
+        }
+        Update: {
+          active?: boolean
+          holder_name?: string
+          id?: string
+          max_amount?: number | null
+          min_amount?: number | null
+          phone_number?: string
+        }
+        Relationships: []
+      }
+      notifications_log: {
+        Row: {
+          admin_id: string | null
+          channel: Database["public"]["Enums"]["notif_channel"]
+          event_type: string | null
+          failure_reason: string | null
+          id: string
+          kmerdiaspora_admin_id: string | null
+          message: string
+          metadata: Json | null
+          notification_key: string | null
+          partner_id: string | null
+          read_at: string | null
+          resource_id: string | null
+          resource_type: string | null
+          sent_at: string
+          status: string | null
+          title: string
+          transaction_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          channel: Database["public"]["Enums"]["notif_channel"]
+          event_type?: string | null
+          failure_reason?: string | null
+          id?: string
+          kmerdiaspora_admin_id?: string | null
+          message: string
+          metadata?: Json | null
+          notification_key?: string | null
+          partner_id?: string | null
+          read_at?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          sent_at?: string
+          status?: string | null
+          title?: string
+          transaction_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          channel?: Database["public"]["Enums"]["notif_channel"]
+          event_type?: string | null
+          failure_reason?: string | null
+          id?: string
+          kmerdiaspora_admin_id?: string | null
+          message?: string
+          metadata?: Json | null
+          notification_key?: string | null
+          partner_id?: string | null
+          read_at?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          sent_at?: string
+          status?: string | null
+          title?: string
+          transaction_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_log_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_log_kma_fkey"
+            columns: ["kmerdiaspora_admin_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_log_partner_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_log_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_log_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      otp_codes: {
+        Row: {
+          attempts_count: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          purpose: Database["public"]["Enums"]["otp_purpose"]
+          verified: boolean
+          whatsapp_number: string
+        }
+        Insert: {
+          attempts_count?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          purpose: Database["public"]["Enums"]["otp_purpose"]
+          verified?: boolean
+          whatsapp_number: string
+        }
+        Update: {
+          attempts_count?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          purpose?: Database["public"]["Enums"]["otp_purpose"]
+          verified?: boolean
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
+      partner_role_assignments: {
+        Row: {
+          assigned_at: string
+          assigned_by_admin_id: string | null
+          partner_id: string
+          role_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          assigned_by_admin_id?: string | null
+          partner_id: string
+          role_id: string
+        }
+        Update: {
+          assigned_at?: string
+          assigned_by_admin_id?: string | null
+          partner_id?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pra_assigned_by_fkey"
+            columns: ["assigned_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pra_partner_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pra_role_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "backoffice_roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partners: {
+        Row: {
+          active: boolean
+          auth_user_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          login_attempts: number
+          notes: string | null
+          phone_number: string | null
+          secret_code_hash: string | null
+          updated_at: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          active?: boolean
+          auth_user_id?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          login_attempts?: number
+          notes?: string | null
+          phone_number?: string | null
+          secret_code_hash?: string | null
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          active?: boolean
+          auth_user_id?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          login_attempts?: number
+          notes?: string | null
+          phone_number?: string | null
+          secret_code_hash?: string | null
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          country: Database["public"]["Enums"]["user_country"]
+          created_at: string
+          id: string
+          login_attempts: number
+          otp_attempts: number
+          rank_code: string
+          rank_updated_at: string | null
+          secret_code_hash: string | null
+          username: string
+          whatsapp_number: string
+        }
+        Insert: {
+          country: Database["public"]["Enums"]["user_country"]
+          created_at?: string
+          id: string
+          login_attempts?: number
+          otp_attempts?: number
+          rank_code?: string
+          rank_updated_at?: string | null
+          secret_code_hash?: string | null
+          username: string
+          whatsapp_number: string
+        }
+        Update: {
+          country?: Database["public"]["Enums"]["user_country"]
+          created_at?: string
+          id?: string
+          login_attempts?: number
+          otp_attempts?: number
+          rank_code?: string
+          rank_updated_at?: string | null
+          secret_code_hash?: string | null
+          username?: string
+          whatsapp_number?: string
+        }
+        Relationships: []
+      }
+      push_tokens: {
+        Row: {
+          active: boolean
+          admin_id: string | null
+          expo_push_token: string
+          id: string
+          kmerdiaspora_admin_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          active?: boolean
+          admin_id?: string | null
+          expo_push_token: string
+          id?: string
+          kmerdiaspora_admin_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          active?: boolean
+          admin_id?: string | null
+          expo_push_token?: string
+          id?: string
+          kmerdiaspora_admin_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_tokens_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "push_tokens_kma_fkey"
+            columns: ["kmerdiaspora_admin_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "push_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rank_rules: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          display_order: number
+          flight_accommodation_months: number
+          flight_loan_enabled: boolean
+          flight_loan_repayment_months: number
+          id: string
+          label: string
+          max_flight_loan_amount: number | null
+          max_money_loan_amount: number | null
+          max_transaction_volume: number | null
+          min_transaction_volume: number
+          money_loan_enabled: boolean
+          money_loan_repayment_months: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          display_order?: number
+          flight_accommodation_months?: number
+          flight_loan_enabled?: boolean
+          flight_loan_repayment_months?: number
+          id?: string
+          label: string
+          max_flight_loan_amount?: number | null
+          max_money_loan_amount?: number | null
+          max_transaction_volume?: number | null
+          min_transaction_volume?: number
+          money_loan_enabled?: boolean
+          money_loan_repayment_months?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          display_order?: number
+          flight_accommodation_months?: number
+          flight_loan_enabled?: boolean
+          flight_loan_repayment_months?: number
+          id?: string
+          label?: string
+          max_flight_loan_amount?: number | null
+          max_money_loan_amount?: number | null
+          max_transaction_volume?: number | null
+          min_transaction_volume?: number
+          money_loan_enabled?: boolean
+          money_loan_repayment_months?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transaction_assignments: {
+        Row: {
+          acknowledged_at: string | null
+          admin_id: string | null
+          assigned_at: string
+          completed_at: string | null
+          id: string
+          notes: string | null
+          partner_id: string | null
+          responsibility: string
+          status: string
+          transaction_id: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          admin_id?: string | null
+          assigned_at?: string
+          completed_at?: string | null
+          id?: string
+          notes?: string | null
+          partner_id?: string | null
+          responsibility: string
+          status?: string
+          transaction_id: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          admin_id?: string | null
+          assigned_at?: string
+          completed_at?: string | null
+          id?: string
+          notes?: string | null
+          partner_id?: string | null
+          responsibility?: string
+          status?: string
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ta_admin_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ta_partner_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ta_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ta_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_execution_proofs: {
+        Row: {
+          description: string | null
+          file_name: string | null
+          file_url: string
+          id: string
+          mime_type: string | null
+          transaction_id: string
+          uploaded_at: string
+          uploaded_by_admin_id: string | null
+          uploaded_by_partner_id: string | null
+        }
+        Insert: {
+          description?: string | null
+          file_name?: string | null
+          file_url: string
+          id?: string
+          mime_type?: string | null
+          transaction_id: string
+          uploaded_at?: string
+          uploaded_by_admin_id?: string | null
+          uploaded_by_partner_id?: string | null
+        }
+        Update: {
+          description?: string | null
+          file_name?: string | null
+          file_url?: string
+          id?: string
+          mime_type?: string | null
+          transaction_id?: string
+          uploaded_at?: string
+          uploaded_by_admin_id?: string | null
+          uploaded_by_partner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_execution_proofs_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_execution_proofs_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_execution_proofs_uploaded_by_admin_id_fkey"
+            columns: ["uploaded_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_execution_proofs_uploaded_by_partner_id_fkey"
+            columns: ["uploaded_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_proofs: {
+        Row: {
+          file_url: string
+          id: string
+          transaction_id: string
+          uploaded_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          file_url: string
+          id?: string
+          transaction_id: string
+          uploaded_at?: string
+          uploaded_by: string
+        }
+        Update: {
+          file_url?: string
+          id?: string
+          transaction_id?: string
+          uploaded_at?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_proofs_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_proofs_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_proofs_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_reviews: {
+        Row: {
+          admin_id: string | null
+          created_at: string
+          decision: string
+          id: string
+          metadata: Json | null
+          partner_id: string | null
+          proof_url: string | null
+          reason: string | null
+          transaction_id: string
+        }
+        Insert: {
+          admin_id?: string | null
+          created_at?: string
+          decision: string
+          id?: string
+          metadata?: Json | null
+          partner_id?: string | null
+          proof_url?: string | null
+          reason?: string | null
+          transaction_id: string
+        }
+        Update: {
+          admin_id?: string | null
+          created_at?: string
+          decision?: string
+          id?: string
+          metadata?: Json | null
+          partner_id?: string | null
+          proof_url?: string | null
+          reason?: string | null
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tr_admin_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tr_partner_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tr_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tr_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transaction_status_history: {
+        Row: {
+          changed_by_admin_id: string | null
+          changed_by_partner_id: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          new_stage: string | null
+          new_status: string
+          previous_stage: string | null
+          previous_status: string | null
+          reason: string | null
+          transaction_id: string
+        }
+        Insert: {
+          changed_by_admin_id?: string | null
+          changed_by_partner_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_stage?: string | null
+          new_status: string
+          previous_stage?: string | null
+          previous_status?: string | null
+          reason?: string | null
+          transaction_id: string
+        }
+        Update: {
+          changed_by_admin_id?: string | null
+          changed_by_partner_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          new_stage?: string | null
+          new_status?: string
+          previous_stage?: string | null
+          previous_status?: string | null
+          reason?: string | null
+          transaction_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tsh_admin_fkey"
+            columns: ["changed_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tsh_partner_fkey"
+            columns: ["changed_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tsh_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tsh_transaction_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "v_transaction_operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          admin_id: string | null
+          amount: number
+          assigned_at: string | null
+          batch_id: string | null
+          cancelled_at: string | null
+          confirmed_at: string | null
+          created_at: string
+          executed_at: string | null
+          expired_at: string | null
+          fee_amount: number
+          first_reviewed_at: string | null
+          id: string
+          last_action_at: string | null
+          momo_deposit_number_id: string | null
+          partner_id: string | null
+          recipient_country: Database["public"]["Enums"]["user_country"] | null
+          recipient_location: string | null
+          recipient_mobile_number: string | null
+          recipient_name: string | null
+          reference_note: string | null
+          rejected_at: string | null
+          rejection_reason: string | null
+          review_deadline: string | null
+          sender_name: string | null
+          sender_phone_number: string | null
+          settled_at: string | null
+          status: Database["public"]["Enums"]["txn_status"]
+          type: Database["public"]["Enums"]["txn_type"]
+          user_id: string
+          workflow_stage: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          amount: number
+          assigned_at?: string | null
+          batch_id?: string | null
+          cancelled_at?: string | null
+          confirmed_at?: string | null
+          created_at?: string
+          executed_at?: string | null
+          expired_at?: string | null
+          fee_amount?: number
+          first_reviewed_at?: string | null
+          id?: string
+          last_action_at?: string | null
+          momo_deposit_number_id?: string | null
+          partner_id?: string | null
+          recipient_country?: Database["public"]["Enums"]["user_country"] | null
+          recipient_location?: string | null
+          recipient_mobile_number?: string | null
+          recipient_name?: string | null
+          reference_note?: string | null
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          review_deadline?: string | null
+          sender_name?: string | null
+          sender_phone_number?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["txn_status"]
+          type: Database["public"]["Enums"]["txn_type"]
+          user_id: string
+          workflow_stage?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          amount?: number
+          assigned_at?: string | null
+          batch_id?: string | null
+          cancelled_at?: string | null
+          confirmed_at?: string | null
+          created_at?: string
+          executed_at?: string | null
+          expired_at?: string | null
+          fee_amount?: number
+          first_reviewed_at?: string | null
+          id?: string
+          last_action_at?: string | null
+          momo_deposit_number_id?: string | null
+          partner_id?: string | null
+          recipient_country?: Database["public"]["Enums"]["user_country"] | null
+          recipient_location?: string | null
+          recipient_mobile_number?: string | null
+          recipient_name?: string | null
+          reference_note?: string | null
+          rejected_at?: string | null
+          rejection_reason?: string | null
+          review_deadline?: string | null
+          sender_name?: string | null
+          sender_phone_number?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["txn_status"]
+          type?: Database["public"]["Enums"]["txn_type"]
+          user_id?: string
+          workflow_stage?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "daily_batches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_momo_deposit_number_id_fkey"
+            columns: ["momo_deposit_number_id"]
+            isOneToOne: false
+            referencedRelation: "momo_deposit_numbers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transfer_fee_tariffs: {
+        Row: {
+          country_a: Database["public"]["Enums"]["user_country"]
+          country_b: Database["public"]["Enums"]["user_country"]
+          fee_amount: number
+          id: string
+          max_amount: number
+          min_amount: number
+        }
+        Insert: {
+          country_a: Database["public"]["Enums"]["user_country"]
+          country_b: Database["public"]["Enums"]["user_country"]
+          fee_amount: number
+          id?: string
+          max_amount: number
+          min_amount: number
+        }
+        Update: {
+          country_a?: Database["public"]["Enums"]["user_country"]
+          country_b?: Database["public"]["Enums"]["user_country"]
+          fee_amount?: number
+          id?: string
+          max_amount?: number
+          min_amount?: number
+        }
+        Relationships: []
+      }
+      wallet_ledger_entries: {
+        Row: {
+          amount: number
+          balance_after: number | null
+          balance_before: number | null
+          created_at: string
+          created_by_admin_id: string | null
+          created_by_partner_id: string | null
+          entry_type: string
+          id: string
+          idempotency_key: string | null
+          metadata: Json | null
+          source_id: string | null
+          source_type: string | null
+          user_id: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after?: number | null
+          balance_before?: number | null
+          created_at?: string
+          created_by_admin_id?: string | null
+          created_by_partner_id?: string | null
+          entry_type: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json | null
+          source_id?: string | null
+          source_type?: string | null
+          user_id: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number | null
+          balance_before?: number | null
+          created_at?: string
+          created_by_admin_id?: string | null
+          created_by_partner_id?: string | null
+          entry_type?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json | null
+          source_id?: string | null
+          source_type?: string | null
+          user_id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wle_admin_fkey"
+            columns: ["created_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wle_partner_fkey"
+            columns: ["created_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wle_user_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wle_wallet_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallets: {
+        Row: {
+          available_balance: number
+          id: string
+          pending_balance: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          available_balance?: number
+          id?: string
+          pending_balance?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          available_balance?: number
+          id?: string
+          pending_balance?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallets_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      v_kd_matching_operations: {
+        Row: {
+          contact_revealed_at: string | null
+          created_automatically: boolean | null
+          created_by_admin_id: string | null
+          created_by_kma_id: string | null
+          created_by_partner_id: string | null
+          driver_notified_at: string | null
+          driver_request_id: string | null
+          id: string | null
+          job_request_id: string | null
+          match_score: number | null
+          matched_at: string | null
+          recruiter_notified_at: string | null
+          status: string | null
+        }
+        Insert: {
+          contact_revealed_at?: string | null
+          created_automatically?: boolean | null
+          created_by_admin_id?: string | null
+          created_by_kma_id?: string | null
+          created_by_partner_id?: string | null
+          driver_notified_at?: string | null
+          driver_request_id?: string | null
+          id?: string | null
+          job_request_id?: string | null
+          match_score?: number | null
+          matched_at?: string | null
+          recruiter_notified_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          contact_revealed_at?: string | null
+          created_automatically?: boolean | null
+          created_by_admin_id?: string | null
+          created_by_kma_id?: string | null
+          created_by_partner_id?: string | null
+          driver_notified_at?: string | null
+          driver_request_id?: string | null
+          id?: string | null
+          job_request_id?: string | null
+          match_score?: number | null
+          matched_at?: string | null
+          recruiter_notified_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_dm_admin_fkey"
+            columns: ["created_by_admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_driver_request_fkey"
+            columns: ["driver_request_id"]
+            isOneToOne: false
+            referencedRelation: "kd_driver_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_job_request_fkey"
+            columns: ["job_request_id"]
+            isOneToOne: false
+            referencedRelation: "kd_job_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_kma_fkey"
+            columns: ["created_by_kma_id"]
+            isOneToOne: false
+            referencedRelation: "kmerdiaspora_admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_dm_partner_fkey"
+            columns: ["created_by_partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_kd_quest_summary: {
+        Row: {
+          beneficiary_user_id: string | null
+          contributor_count: number | null
+          created_at: string | null
+          creator_user_id: string | null
+          currency: string | null
+          current_amount: number | null
+          description: string | null
+          duration_end: string | null
+          duration_start: string | null
+          id: string | null
+          status: string | null
+          target_amount: number | null
+          title: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kd_quests_beneficiary_fk"
+            columns: ["beneficiary_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_beneficiary_fkey"
+            columns: ["beneficiary_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_creator_fk"
+            columns: ["creator_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kd_quests_creator_fkey"
+            columns: ["creator_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_transaction_operations: {
+        Row: {
+          admin_id: string | null
+          amount: number | null
+          confirmed_at: string | null
+          created_at: string | null
+          executed_at: string | null
+          fee_amount: number | null
+          id: string | null
+          partner_id: string | null
+          review_deadline: string | null
+          settled_at: string | null
+          status: Database["public"]["Enums"]["txn_status"] | null
+          type: Database["public"]["Enums"]["txn_type"] | null
+          user_id: string | null
+          workflow_stage: string | null
+        }
+        Insert: {
+          admin_id?: string | null
+          amount?: number | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          fee_amount?: number | null
+          id?: string | null
+          partner_id?: string | null
+          review_deadline?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["txn_status"] | null
+          type?: Database["public"]["Enums"]["txn_type"] | null
+          user_id?: string | null
+          workflow_stage?: string | null
+        }
+        Update: {
+          admin_id?: string | null
+          amount?: number | null
+          confirmed_at?: string | null
+          created_at?: string | null
+          executed_at?: string | null
+          fee_amount?: number | null
+          id?: string | null
+          partner_id?: string | null
+          review_deadline?: string | null
+          settled_at?: string | null
+          status?: Database["public"]["Enums"]["txn_status"] | null
+          type?: Database["public"]["Enums"]["txn_type"] | null
+          user_id?: string | null
+          workflow_stage?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_admin_id_fkey"
+            columns: ["admin_id"]
+            isOneToOne: false
+            referencedRelation: "admins"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_partner_id_fkey"
+            columns: ["partner_id"]
+            isOneToOne: false
+            referencedRelation: "partners"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Functions: {
+      admin_approve_loan_request: {
+        Args: {
+          p_approved_amount: number
+          p_notes?: string
+          p_request_id: string
+          p_service_fee?: number
+        }
+        Returns: {
+          accommodation_months: number
+          amount_repaid: number
+          approved_amount: number
+          approved_at: string
+          approved_by_admin_id: string | null
+          closed_at: string | null
+          created_at: string
+          disbursed_at: string | null
+          disbursement_status: string
+          id: string
+          loan_request_id: string
+          loan_type: string
+          maturity_date: string | null
+          notes: string | null
+          outstanding_amount: number
+          rank_at_approval: string
+          repayment_months: number
+          requested_amount: number
+          service_fee: number
+          status: string
+          total_due: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "loans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_disburse_loan: {
+        Args: { p_external_reference?: string; p_loan_id: string }
+        Returns: {
+          accommodation_months: number
+          amount_repaid: number
+          approved_amount: number
+          approved_at: string
+          approved_by_admin_id: string | null
+          closed_at: string | null
+          created_at: string
+          disbursed_at: string | null
+          disbursement_status: string
+          id: string
+          loan_request_id: string
+          loan_type: string
+          maturity_date: string | null
+          notes: string | null
+          outstanding_amount: number
+          rank_at_approval: string
+          repayment_months: number
+          requested_amount: number
+          service_fee: number
+          status: string
+          total_due: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "loans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_mark_loan_defaulted: {
+        Args: { p_loan_id: string }
+        Returns: {
+          accommodation_months: number
+          amount_repaid: number
+          approved_amount: number
+          approved_at: string
+          approved_by_admin_id: string | null
+          closed_at: string | null
+          created_at: string
+          disbursed_at: string | null
+          disbursement_status: string
+          id: string
+          loan_request_id: string
+          loan_type: string
+          maturity_date: string | null
+          notes: string | null
+          outstanding_amount: number
+          rank_at_approval: string
+          repayment_months: number
+          requested_amount: number
+          service_fee: number
+          status: string
+          total_due: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "loans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_record_loan_repayment: {
+        Args: {
+          p_amount: number
+          p_external_reference?: string
+          p_loan_id: string
+          p_note?: string
+          p_payment_method?: string
+          p_proof_url?: string
+        }
+        Returns: {
+          accommodation_months: number
+          amount_repaid: number
+          approved_amount: number
+          approved_at: string
+          approved_by_admin_id: string | null
+          closed_at: string | null
+          created_at: string
+          disbursed_at: string | null
+          disbursement_status: string
+          id: string
+          loan_request_id: string
+          loan_type: string
+          maturity_date: string | null
+          notes: string | null
+          outstanding_amount: number
+          rank_at_approval: string
+          repayment_months: number
+          requested_amount: number
+          service_fee: number
+          status: string
+          total_due: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "loans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_reject_loan_request: {
+        Args: { p_reason: string; p_request_id: string }
+        Returns: {
+          accommodation_months: number
+          accommodation_requested: boolean
+          admin_id: string | null
+          admin_notes: string | null
+          amount: number
+          cancelled_at: string | null
+          completed_at: string | null
+          contacted_at: string | null
+          contacted_by_admin_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          id_back_path: string
+          id_front_path: string
+          loan_type: string
+          passenger_name: string | null
+          phone_number: string | null
+          processed_at: string | null
+          rank_at_request: string
+          rank_rule_id: string | null
+          rejection_reason: string | null
+          repayment_months: number
+          status: string
+          submitted_at: string
+          travel_date: string | null
+          travel_destination: string | null
+          travel_origin: string | null
+          updated_at: string
+          user_id: string
+          whatsapp_number: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "loan_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      admin_update_loan_request_status: {
+        Args: { p_new_status: string; p_reason?: string; p_request_id: string }
+        Returns: {
+          accommodation_months: number
+          accommodation_requested: boolean
+          admin_id: string | null
+          admin_notes: string | null
+          amount: number
+          cancelled_at: string | null
+          completed_at: string | null
+          contacted_at: string | null
+          contacted_by_admin_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          id_back_path: string
+          id_front_path: string
+          loan_type: string
+          passenger_name: string | null
+          phone_number: string | null
+          processed_at: string | null
+          rank_at_request: string
+          rank_rule_id: string | null
+          rejection_reason: string | null
+          repayment_months: number
+          status: string
+          submitted_at: string
+          travel_date: string | null
+          travel_destination: string | null
+          travel_origin: string | null
+          updated_at: string
+          user_id: string
+          whatsapp_number: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "loan_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      cancel_my_loan_request: {
+        Args: { p_request_id: string }
+        Returns: {
+          accommodation_months: number
+          accommodation_requested: boolean
+          admin_id: string | null
+          admin_notes: string | null
+          amount: number
+          cancelled_at: string | null
+          completed_at: string | null
+          contacted_at: string | null
+          contacted_by_admin_id: string | null
+          created_at: string
+          full_name: string
+          id: string
+          id_back_path: string
+          id_front_path: string
+          loan_type: string
+          passenger_name: string | null
+          phone_number: string | null
+          processed_at: string | null
+          rank_at_request: string
+          rank_rule_id: string | null
+          rejection_reason: string | null
+          repayment_months: number
+          status: string
+          submitted_at: string
+          travel_date: string | null
+          travel_destination: string | null
+          travel_origin: string | null
+          updated_at: string
+          user_id: string
+          whatsapp_number: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "loan_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      create_user_notification: {
+        Args: {
+          p_event_type: string
+          p_message: string
+          p_metadata?: Json
+          p_notification_key?: string
+          p_resource_id?: string
+          p_resource_type?: string
+          p_title?: string
+          p_user_id: string
+        }
+        Returns: string
+      }
+      get_loan_eligibility: {
+        Args: { p_amount: number; p_loan_type: string }
+        Returns: Json
+      }
+      get_transfer_fee: {
+        Args: {
+          p_amount: number
+          p_country_a: Database["public"]["Enums"]["user_country"]
+          p_country_b: Database["public"]["Enums"]["user_country"]
+        }
+        Returns: number
+      }
+      is_current_admin: { Args: never; Returns: boolean }
+      kd_calculate_match_score: {
+        Args: { p_driver_request_id: string; p_job_request_id: string }
+        Returns: number
+      }
+      kd_close_quest_automatically: {
+        Args: { p_force_close?: boolean; p_quest_id: string }
+        Returns: Json
+      }
+      kd_contribute_to_quest: {
+        Args: { p_amount: number; p_quest_id: string; p_secret_code: string }
+        Returns: Json
+      }
+      kd_count_distinct_contributors: {
+        Args: { p_quest_id: string }
+        Returns: number
+      }
+      kd_create_automatic_pseudo_deposit: {
+        Args: { p_quest_id: string }
+        Returns: string
+      }
+      kd_create_quest:
+        | {
+            Args: {
+              p_beneficiary_user_id: string
+              p_currency?: string
+              p_description?: string
+              p_duration_end?: string
+              p_initial_contribution?: number
+              p_secret_code?: string
+              p_target_amount?: number
+              p_title: string
+            }
+            Returns: {
+              beneficiary_approval_required: boolean | null
+              beneficiary_approved_at: string | null
+              beneficiary_rejected_at: string | null
+              beneficiary_user_id: string | null
+              cancelled_at: string | null
+              closed_at: string | null
+              completed_at: string | null
+              created_at: string
+              creator_initial_contribution_id: string | null
+              creator_initial_contribution_required: boolean
+              creator_user_id: string | null
+              currency: string
+              current_amount: number
+              description: string | null
+              duration_end: string | null
+              duration_start: string
+              id: string
+              managed_by_admin_id: string | null
+              managed_by_kma_id: string | null
+              managed_by_partner_id: string | null
+              moderated_at: string | null
+              moderated_by_kma_id: string | null
+              published_at: string | null
+              settled_at: string | null
+              settlement_amount: number | null
+              settlement_transaction_id: string | null
+              seven_day_deadline: string | null
+              status: string
+              target_amount: number | null
+              title: string
+              updated_at: string
+            }
+            SetofOptions: {
+              from: "*"
+              to: "kd_quests"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
+            Args: {
+              p_beneficiary_user_id: string
+              p_description: string
+              p_duration_end: string
+              p_target_amount: number
+              p_title: string
+            }
+            Returns: string
+          }
+      kd_generate_driver_matches: {
+        Args: { p_driver_request_id: string }
+        Returns: number
+      }
+      kd_is_quest_member: { Args: { p_quest_id: string }; Returns: boolean }
+      kd_join_quest: { Args: { p_quest_id: string }; Returns: boolean }
+      kd_process_expired_quests: { Args: never; Returns: number }
+      kd_process_quest_closure: { Args: { p_quest_id: string }; Returns: Json }
+      kd_quest_accepts_contribution: {
+        Args: { p_quest_id: string }
+        Returns: boolean
+      }
+      kd_quest_confirmed_amount: {
+        Args: { p_quest_id: string }
+        Returns: number
+      }
+      kd_quest_contributor_count: {
+        Args: { p_quest_id: string }
+        Returns: number
+      }
+      kd_refresh_driver_matches: {
+        Args: { p_driver_request_id: string }
+        Returns: number
+      }
+      kd_refund_creator_contributions: {
+        Args: { p_quest_id: string }
+        Returns: number
+      }
+      kd_respond_quest_approval: {
+        Args: { p_approved: boolean; p_quest_id: string }
+        Returns: boolean
+      }
+      queue_loan_notification: {
+        Args: {
+          p_event_type: string
+          p_message: string
+          p_metadata?: Json
+          p_user_id: string
+        }
+        Returns: undefined
+      }
+      recalculate_user_rank: { Args: { p_user_id: string }; Returns: Json }
+      refresh_loan_overdues: { Args: never; Returns: number }
+      submit_loan_request: {
+        Args: {
+          p_accommodation_requested?: boolean
+          p_amount: number
+          p_full_name: string
+          p_id_back_path: string
+          p_id_front_path: string
+          p_loan_type: string
+          p_passenger_name?: string
+          p_phone_number: string
+          p_travel_date?: string
+          p_travel_destination?: string
+          p_travel_origin?: string
+          p_whatsapp_number: string
+        }
+        Returns: string
+      }
+    }
+    Enums: {
+      admin_role: "admin" | "partner"
+      kd_city: "Sigilli" | "Douala" | "Yaoundé"
+      kd_contribution_status: "confirmed" | "refunded" | "cancelled"
+      kd_match_status:
+        | "suggested"
+        | "selected"
+        | "contact_initiated"
+        | "matched"
+        | "rejected"
+        | "closed"
+      kd_profile_type: "driver" | "recruiter" | "both"
+      kd_quest_member_status: "active" | "left" | "blocked"
+      kd_quest_status:
+        | "draft"
+        | "pending_beneficiary_approval"
+        | "published"
+        | "active"
+        | "completed"
+        | "closed"
+        | "cancelled"
+        | "expired"
+        | "suspended"
+      kd_request_status:
+        | "draft"
+        | "published"
+        | "open"
+        | "matching"
+        | "profile_selected"
+        | "contact_initiated"
+        | "matched"
+        | "closed"
+        | "cancelled"
+      notif_channel: "whatsapp" | "push"
+      otp_purpose: "registration" | "secret_code_recovery"
+      txn_status:
+        | "pending_proof"
+        | "under_review"
+        | "confirmed"
+        | "rejected"
+        | "cancelled"
+      txn_type: "deposit" | "transfer" | "withdrawal"
+      user_country: "mali" | "guinee" | "cameroun"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      admin_role: ["admin", "partner"],
+      kd_city: ["Sigilli", "Douala", "Yaoundé"],
+      kd_contribution_status: ["confirmed", "refunded", "cancelled"],
+      kd_match_status: [
+        "suggested",
+        "selected",
+        "contact_initiated",
+        "matched",
+        "rejected",
+        "closed",
+      ],
+      kd_profile_type: ["driver", "recruiter", "both"],
+      kd_quest_member_status: ["active", "left", "blocked"],
+      kd_quest_status: [
+        "draft",
+        "pending_beneficiary_approval",
+        "published",
+        "active",
+        "completed",
+        "closed",
+        "cancelled",
+        "expired",
+        "suspended",
+      ],
+      kd_request_status: [
+        "draft",
+        "published",
+        "open",
+        "matching",
+        "profile_selected",
+        "contact_initiated",
+        "matched",
+        "closed",
+        "cancelled",
+      ],
+      notif_channel: ["whatsapp", "push"],
+      otp_purpose: ["registration", "secret_code_recovery"],
+      txn_status: [
+        "pending_proof",
+        "under_review",
+        "confirmed",
+        "rejected",
+        "cancelled",
+      ],
+      txn_type: ["deposit", "transfer", "withdrawal"],
+      user_country: ["mali", "guinee", "cameroun"],
+    },
+  },
+} as const
