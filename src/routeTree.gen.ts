@@ -16,6 +16,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedApplicationsIndexRouteImport } from './routes/_authenticated/applications.index'
 import { Route as AuthenticatedApplicationsIdRouteImport } from './routes/_authenticated/applications.$id'
 import { Route as AuthenticatedLoansIndexRouteImport } from './routes/_authenticated/loans.index'
+import { Route as AuthenticatedLoansIdRouteImport } from './routes/_authenticated/loans.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,12 +54,18 @@ const AuthenticatedLoansIndexRoute = AuthenticatedLoansIndexRouteImport.update({
   path: '/loans/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedLoansIdRoute = AuthenticatedLoansIdRouteImport.update({
+  id: '/loans/$id',
+  path: '/loans/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/applications/$id': typeof AuthenticatedApplicationsIdRoute
+  '/loans/$id': typeof AuthenticatedLoansIdRoute
   '/applications/': typeof AuthenticatedApplicationsIndexRoute
   '/loans/': typeof AuthenticatedLoansIndexRoute
 }
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/applications/$id': typeof AuthenticatedApplicationsIdRoute
+  '/loans/$id': typeof AuthenticatedLoansIdRoute
   '/applications': typeof AuthenticatedApplicationsIndexRoute
   '/loans': typeof AuthenticatedLoansIndexRoute
 }
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/applications/$id': typeof AuthenticatedApplicationsIdRoute
+  '/_authenticated/loans/$id': typeof AuthenticatedLoansIdRoute
   '/_authenticated/applications/': typeof AuthenticatedApplicationsIndexRoute
   '/_authenticated/loans/': typeof AuthenticatedLoansIndexRoute
 }
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/applications/$id'
+    | '/loans/$id'
     | '/applications/'
     | '/loans/'
   fileRoutesByTo: FileRoutesByTo
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/applications/$id'
+    | '/loans/$id'
     | '/applications'
     | '/loans'
   id:
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/dashboard'
     | '/_authenticated/applications/$id'
+    | '/_authenticated/loans/$id'
     | '/_authenticated/applications/'
     | '/_authenticated/loans/'
   fileRoutesById: FileRoutesById
@@ -165,12 +177,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLoansIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/loans/$id': {
+      id: '/_authenticated/loans/$id'
+      path: '/loans/$id'
+      fullPath: '/loans/$id'
+      preLoaderRoute: typeof AuthenticatedLoansIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedApplicationsIdRoute: typeof AuthenticatedApplicationsIdRoute
+  AuthenticatedLoansIdRoute: typeof AuthenticatedLoansIdRoute
   AuthenticatedApplicationsIndexRoute: typeof AuthenticatedApplicationsIndexRoute
   AuthenticatedLoansIndexRoute: typeof AuthenticatedLoansIndexRoute
 }
@@ -178,6 +198,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedApplicationsIdRoute: AuthenticatedApplicationsIdRoute,
+  AuthenticatedLoansIdRoute: AuthenticatedLoansIdRoute,
   AuthenticatedApplicationsIndexRoute: AuthenticatedApplicationsIndexRoute,
   AuthenticatedLoansIndexRoute: AuthenticatedLoansIndexRoute,
 }
